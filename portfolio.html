@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aleksandra Avramenko — Computational Biologist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    :root {
+      --ink:       #0A0E14;
+      --teal-deep: #0D4F4F;
+      --cyan:      #2DDAB4;
+      --cyan-dim:  #1BA88A;
+      --sage:      #8BBFB0;
+      --offwhite:  #E8F0EC;
+      --muted:     #5A7A72;
+      --surface:   #111820;
+      --surface2:  #0F1A14;
+      --border:    rgba(45,218,180,0.15);
+    }
+ 
+    html { scroll-behavior: smooth; }
+ 
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--ink);
+      color: var(--offwhite);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+ 
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.1rem 3.5rem;
+      background: rgba(10,14,20,0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--cyan);
+      letter-spacing: 0.02em;
+    }
+    .nav-logo span { color: var(--sage); }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2.5rem;
+    }
+    nav ul a {
+      text-decoration: none;
+      color: var(--sage);
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    nav ul a:hover { color: var(--cyan); }
+ 
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 8rem 4.5rem 5rem;
+      gap: 3rem;
+      position: relative;
+      /* REMOVED overflow:hidden — this was clipping sections below */
+    }
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 70% 50%, rgba(13,79,79,0.35) 0%, transparent 70%);
+      pointer-events: none;
+    }
+ 
+    .hero-left { position: relative; z-index: 2; }
+    .hero-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--cyan);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .hero-tag::before {
+      content: '';
+      display: inline-block;
+      width: 28px;
+      height: 1px;
+      background: var(--cyan);
+    }
+    .hero-name {
+      font-size: clamp(3rem, 5.5vw, 5rem);
+      font-weight: 700;
+      line-height: 1.0;
+      color: var(--offwhite);
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    .hero-name em {
+      font-style: normal;
+      color: var(--cyan);
+    }
+    .hero-subtitle {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+      letter-spacing: 0.04em;
+    }
+    .hero-bio {
+      font-size: 1rem;
+      color: var(--sage);
+      max-width: 460px;
+      line-height: 1.8;
+      margin-bottom: 2.8rem;
+      font-weight: 300;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.7rem;
+      background: var(--cyan);
+      color: var(--ink);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: #4ae8c8; transform: translateY(-1px); }
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.7rem;
+      background: transparent;
+      color: var(--cyan);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid rgba(45,218,180,0.4);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--cyan); color: #4ae8c8; }
+ 
+    /* ── PHOTO ── */
+    .hero-right {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+    .photo-outer {
+      position: relative;
+      width: 310px;
+      height: 370px;
+    }
+    .photo-outer::after {
+      content: '';
+      position: absolute;
+      bottom: -16px;
+      right: -16px;
+      width: 100%;
+      height: 100%;
+      border: 1px solid rgba(45,218,180,0.3);
+      pointer-events: none;
+    }
+    .photo-inner {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+    .photo-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+ 
+    /* ── HELIX CANVAS ── */
+    #helix-canvas {
+      position: absolute;
+      top: 0; right: 0;
+      width: 55%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.18;
+      z-index: 1;
+    }
+ 
+    /* ── SECTION SHARED ── */
+    .section-wrap {
+      padding: 6.5rem 4.5rem;
+      position: relative;
+      z-index: 2;
+    }
+    .section-wrap.light {
+      background: #0C1710;
+    }
+    .section-wrap.mid {
+      background: var(--surface2);
+    }
+    .eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 0.7rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .eyebrow::after {
+      content: '';
+      flex: 1;
+      max-width: 48px;
+      height: 1px;
+      background: var(--cyan);
+      opacity: 0.5;
+    }
+    .section-heading {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      color: var(--offwhite);
+      line-height: 1.1;
+      margin-bottom: 3.5rem;
+    }
+ 
+    /* ── EXPERIENCE ── */
+    .exp-list { display: flex; flex-direction: column; gap: 0; }
+    .exp-item {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 0 3rem;
+      padding: 2.4rem 0;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .exp-item:first-child { border-top: 1px solid var(--border); }
+    .exp-period {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--cyan);
+      letter-spacing: 0.06em;
+      margin-bottom: 0.4rem;
+    }
+    .exp-type {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .exp-role {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--offwhite);
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.01em;
+    }
+    .exp-org {
+      font-size: 0.88rem;
+      color: var(--cyan);
+      margin-bottom: 0.8rem;
+      font-weight: 500;
+    }
+    .exp-desc {
+      font-size: 0.92rem;
+      color: var(--sage);
+      line-height: 1.75;
+      font-weight: 300;
+      max-width: 620px;
+    }
+    .exp-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 1rem;
+    }
+    .exp-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      padding: 0.25rem 0.6rem;
+      border: 1px solid rgba(45,218,180,0.25);
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+ 
+    /* ── PROJECTS ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5px;
+    }
+    .project-card {
+      background: var(--surface);
+      padding: 2.2rem;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      border: 1px solid transparent;
+      transition: border-color 0.25s, background 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--cyan);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+    .project-card:hover { border-color: var(--border); background: #111d18; }
+    .project-card:hover::before { transform: scaleX(1); }
+    .proj-category {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--cyan);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .proj-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--offwhite);
+      letter-spacing: -0.01em;
+      line-height: 1.25;
+    }
+    .proj-desc {
+      font-size: 0.88rem;
+      color: var(--sage);
+      line-height: 1.75;
+      font-weight: 300;
+      flex: 1;
+    }
+    .proj-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.4rem;
+    }
+    .proj-stack span {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem;
+      padding: 0.2rem 0.5rem;
+      background: rgba(45,218,180,0.07);
+      color: var(--sage);
+      letter-spacing: 0.06em;
+    }
+    .proj-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--cyan);
+      margin-top: 0.6rem;
+      letter-spacing: 0.06em;
+    }
+    .proj-link svg { transition: transform 0.2s; }
+    .project-card:hover .proj-link svg { transform: translateX(3px); }
+ 
+    /* ── SKILLS ── */
+    .skills-layout {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 2.5rem;
+    }
+    .skill-group-name {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 1rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .skill-pills {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .skill-pill {
+      font-size: 0.88rem;
+      color: var(--sage);
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .skill-pill::before {
+      content: '';
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      background: var(--cyan);
+      opacity: 0.5;
+      flex-shrink: 0;
+    }
+ 
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--teal-deep);
+      padding: 6rem 4.5rem;
+      position: relative;
+      z-index: 2;
+      overflow: hidden;
+    }
+    #contact::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 100% at 50% 120%, rgba(45,218,180,0.12) 0%, transparent 60%);
+    }
+    .contact-inner { position: relative; z-index: 1; max-width: 600px; }
+    #contact .eyebrow { color: var(--cyan); }
+    #contact .section-heading { color: var(--offwhite); margin-bottom: 1rem; }
+    .contact-sub {
+      font-size: 1rem;
+      color: var(--sage);
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+      line-height: 1.8;
+    }
+    .contact-links { display: flex; gap: 1rem; flex-wrap: wrap; }
+ 
+    footer {
+      background: var(--ink);
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 4.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 2;
+    }
+    footer p {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+ 
+    /* ── REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+ 
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      #hero { grid-template-columns: 1fr; padding: 7rem 2rem 4rem; }
+      .hero-right { display: none; }
+      .exp-item { grid-template-columns: 1fr; gap: 0.5rem; }
+      .section-wrap { padding: 4.5rem 2rem; }
+      nav { padding: 1rem 1.5rem; }
+      nav ul { gap: 1.4rem; }
+      #contact { padding: 4.5rem 2rem; }
+      footer { padding: 1.2rem 2rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+ 
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      * { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+ 
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Aleksandra Avramenko<span>()</span></div>
+  <ul>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Research</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+ 
+<!-- HERO -->
+<section id="hero">
+  <canvas id="helix-canvas"></canvas>
+ 
+  <div class="hero-left">
+    <div class="hero-tag">Computational Biologist</div>
+    <h1 class="hero-name">Aleksandra<br><em>Avramenko</em></h1>
+    <p class="hero-subtitle">genomics · data · ml pipelines</p>
+    <p class="hero-bio">
+      I bridge the gap between physical experimentation and computational analysis, combining hands-on wet lab and hardware engineering experience with robust machine learning pipelines.
+      I am driven by a central question: how can seamlessly integrating bench-side insight with digital intelligence accelerate the next generation of biomedical breakthroughs?
+    </p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn-primary">View Research</a>
+      <a href="#contact" class="btn-ghost">Get in Touch</a>
+    </div>
+  </div>
+ 
+  <div class="hero-right">
+    <div class="photo-outer">
+      <div class="photo-inner">
+        <!-- Replace assets/photo.jpg with your actual photo file path -->
+        <img src="assets/IMG_9943 3.HEIC" alt="Aleksandra Avramenko" />
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- EXPERIENCE -->
+<div id="experience" class="section-wrap mid">
+  <div class="eyebrow">Experience</div>
+  <h2 class="section-heading">Where I've worked</h2>
+ 
+  <div class="exp-list">
+ 
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">Summer 2025</div>
+        <div class="exp-type">Research</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Undergraduate Engineering Intern</div>
+        <div class="exp-org">Tearney Lab · Harvard-MIT Health Sciences and Technology, Massachusetts General Brigham · Boston, MA</div>
+        <div class="exp-desc">
+          ● Designed and simulated high-precision microscopic optical components for a proof-of-concept Spectral Domain Optical Coherence Tomography (SD-OCT) system using Zemax and SolidWorks to minimize motion artifacts<br>
+          ● Fabricated micro-scale elements using a Nanoscribe Two-Photon Polymerization Printer for biomedical device prototyping<br>
+          ● Aligned individual optical components (including a supercontinuum laser, specialized lenses, and mirrors) to interface sub-assemblies with a high-resolution camera within a free-space SD-OCT system<br>
+          ● Engineered Python/C++ pipelines to interface hardware components for automated frame capture and downstream image analysis<br>
+          ● Presented technical milestones biweekly to the PI and researchers, culminating in a poster presentation to the Wellman Center
+        </div>
+        <div class="exp-tags">
+          <span class="exp-tag">Free-space OCT</span>
+          <span class="exp-tag">Two-Photon Polymerization</span>
+          <span class="exp-tag">Zemax</span>
+          <span class="exp-tag">SolidWorks</span>
+          <span class="exp-tag">C++</span>
+          <span class="exp-tag">Python</span>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">Fall 2024 – Spring 2025</div>
+        <div class="exp-type">Consulting<br>Research</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">AI Student Fellow & AI Tutor</div>
+        <div class="exp-org">Davis Institute for Artificial Intelligence · Colby College · Waterville, ME</div>
+        <div class="exp-desc">
+          ● Led weekly 1-hour workshops for faculty and students on the ethical, mindful, and strategic use of LLMs<br>
+          ● Supported the development of Mule Chat, integrating various AI models (Llama 3.1, GPT-4o) to enhance user interface design and campus-wide communication
+        </div>
+        <div class="exp-tags">
+          <span class="exp-tag">AI literacy</span>
+          <span class="exp-tag">Teaching</span>
+          <span class="exp-tag">Prompt-engineering</span>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">Fall 2023 – Spring 2025</div>
+        <div class="exp-type">Teaching</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Computer Science Teacher Assistant & Project Grader</div>
+        <div class="exp-org">Computer Science Department · Colby College · Waterville, ME</div>
+        <div class="exp-desc">
+          ● Tutored students in algorithms & data structures, improving outcomes by 25%<br>
+          ● Designed personalized tutoring guides, improving student performance in Python, Java, and C languages<br>
+          ● Courses: CS 333 - Programming Languages (grader); CS 231 - Data Structures and Algorithms (TA); CS 152 - Computational Thinking: Science (grader, TA, tutor)
+        </div>
+        <div class="exp-tags">
+          <span class="exp-tag">Tutoring</span>
+          <span class="exp-tag">Group Teaching</span>
+          <span class="exp-tag">Python</span>
+          <span class="exp-tag">Java</span>
+          <span class="exp-tag">C</span>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">Spring 2023 – Summer 2023</div>
+        <div class="exp-type">Research</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Genetics Summer Research Assistant & Lab Assistant</div>
+        <div class="exp-org">Biology Department · Colby College · Waterville, ME</div>
+        <div class="exp-desc">
+          ● Investigated the C-terminus of Mms21 in preserving genome stability to understand genetic architectures in complex diseases<br>
+          ● Assessed genetic interactions utilizing PCR amplification, SnapGene software, and bacterial plasmid DNA introductions to yeast<br>
+          ● Presented findings and comprehensive data interpretations to interdisciplinary audiences at the Summer Research Retreat<br>
+          ● Maintained and setup laboratory equipment and supplies, ensuring optimal functionality of the lab classes
+        </div>
+        <div class="exp-tags">
+          <span class="exp-tag">PCR</span>
+          <span class="exp-tag">SnapGene</span>
+          <span class="exp-tag">Yeast DNA Extraction</span>
+          <span class="exp-tag">DNA Purification</span>
+          <span class="exp-tag">Gel Electrophoresis</span>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">Winter 2026</div>
+        <div class="exp-type">Education</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">Tuck Business Bridge Program</div>
+        <div class="exp-org">Dartmouth College · Hanover, NH</div>
+        <div class="exp-desc">
+          Capstone Project: Equity Valuation of Starbucks Corp.; Growth & Strategy for Gifford's Ice Cream
+        </div>
+        <div class="exp-tags">
+          <span class="exp-tag">Corporate Finance</span>
+          <span class="exp-tag">Managerial Economics</span>
+          <span class="exp-tag">Business Analytics</span>
+          <span class="exp-tag">Business Strategy</span>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="exp-item reveal">
+      <div class="exp-meta">
+        <div class="exp-period">2022 – 2026</div>
+        <div class="exp-type">Education</div>
+      </div>
+      <div class="exp-content">
+        <div class="exp-role">BA Computational Biology & Music (Computer Science minor)</div>
+        <div class="exp-org">Colby College · Waterville, ME</div>
+        <div class="exp-desc">Dean's List · GPA 3.83/4.0</div>
+        <div class="exp-tags">
+          <span class="exp-tag">Applied Biomedical Genomics</span>
+          <span class="exp-tag">Database Design & Development</span>
+          <span class="exp-tag">Genetics</span>
+          <span class="exp-tag">Bio-Inspired Machine Learning</span>
+        </div>
+      </div>
+    </div>
+ 
+  </div>
+</div>
+ 
+<!-- PROJECTS -->
+<div id="projects" class="section-wrap light">
+  <div class="eyebrow">Research</div>
+  <h2 class="section-heading">Selected projects</h2>
+ 
+  <div class="projects-grid">
+ 
+    <a href="https://gitfront.io/r/28flexi06/FQHWCHMQWMXS/mycobacterium-nhej-genomics/" target="_blank" rel="noopener" class="project-card reveal">
+      <div class="proj-category">Genomics</div>
+      <div class="proj-name">Comparative Genomics of NHEJ Accessory Proteins Across <i>Mycobacterium</i> Species</div>
+      <div class="proj-desc">
+        How does genome size shape DNA repair machinery? We built an end-to-end bioinformatics pipeline to profile five NHEJ repair proteins across 20 <i>Mycobacterium</i> species — combining genome annotation (BAKTA), protein homology search (BLASTp), multiple sequence alignment (MAFFT), and phylogenetic tree construction (IQ-TREE, OrthoFinder). Statistical analysis in R revealed that UvrD copy number scales significantly with genome size (r = 0.52, p = 0.018), and that smaller genomes may exhibit lower NHEJ fidelity — with downstream implications for drug resistance in pathogens like <i>M. tuberculosis</i>.
+      </div>
+      <div class="proj-stack">
+        <span>BAKTA</span><span>BLASTp</span><span>MAFFT</span><span>IQ-TREE</span><span>OrthoFinder</span><span>FastTree</span><span>R</span><span>Unix/Linux</span>
+      </div>
+      <div class="proj-link">
+        View code
+        <svg width="13" height="13" fill="none" viewBox="0 0 13 13"><path d="M1 6.5h11M6.5 1l5.5 5.5-5.5 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </a>
+ 
+    <a href="https://28flexi06.github.io/are-you-smarter-than-a-neural-network-main/public/index.html" target="_blank" rel="noopener" class="project-card reveal">
+      <div class="proj-category">Machine Learning</div>
+      <div class="proj-name">Can You Beat a Brain-Inspired Neural Network?</div>
+      <div class="proj-desc">
+        Most AI learns from labeled data. Ours didn't. We engineered an unsupervised neural network using Oja's rule — a biologically-inspired learning algorithm modeled after how real neurons strengthen connections — that discovers visual patterns entirely on its own. The result: 98.3% accuracy on MNIST and 50.7% on CIFAR-10, with zero manual labeling.
+      </div>
+      <div class="proj-stack">
+        <span>Python</span><span>TensorFlow</span><span>NumPy</span><span>Hebb Net</span><span>JavaScript</span><span>Cloud GPU</span>
+      </div>
+      <div class="proj-link">
+        Think you can do better? Play the live demo!
+        <svg width="13" height="13" fill="none" viewBox="0 0 13 13"><path d="M1 6.5h11M6.5 1l5.5 5.5-5.5 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </a>
+ 
+    <a href="https://youtu.be/kSR9w7y_NE0" target="_blank" rel="noopener" class="project-card reveal">
+      <div class="proj-category">Full-Stack App</div>
+      <div class="proj-name">Waterville Wander</div>
+      <div class="proj-desc">
+        Where should you run today? Which trail is safe for cycling? Waterville residents and Colby students didn't have a good answer — so we built one. A full-stack web application mapping every road and trail in Waterville with real geospatial data, interactive filtering, and safety ratings. PostgreSQL/PostGIS database, Docker-deployed infrastructure, OpenStreetMap integration, and separate user/admin interfaces — with an IRB-approved user testing study to validate the design.
+      </div>
+      <div class="proj-stack">
+        <span>PostgreSQL</span><span>PostGIS</span><span>Docker</span><span>HTML/CSS/JS</span><span>OpenStreetMap</span><span>VM Deployment</span>
+      </div>
+      <div class="proj-link">
+        Watch the demo!
+        <svg width="13" height="13" fill="none" viewBox="0 0 13 13"><path d="M1 6.5h11M6.5 1l5.5 5.5-5.5 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </a>
+ 
+  </div>
+</div>
+ 
+<!-- SKILLS -->
+<div id="skills" class="section-wrap mid">
+  <div class="eyebrow">Skills</div>
+  <h2 class="section-heading">Tools & methods</h2>
+ 
+  <div class="skills-layout">
+ 
+    <div class="skill-group reveal">
+      <div class="skill-group-name">Programming Languages</div>
+      <div class="skill-pills">
+        <div class="skill-pill">Python</div>
+        <div class="skill-pill">R</div>
+        <div class="skill-pill">Java</div>
+        <div class="skill-pill">C++</div>
+        <div class="skill-pill">Bash / Shell</div>
+        <div class="skill-pill">SQL / NoSQL</div>
+      </div>
+    </div>
+ 
+    <div class="skill-group reveal">
+      <div class="skill-group-name">Bioinformatics & Genomics</div>
+      <div class="skill-pills">
+        <div class="skill-pill">BLAST / BLASTp</div>
+        <div class="skill-pill">MAFFT / MUSCLE</div>
+        <div class="skill-pill">BAKTA / Prokka</div>
+        <div class="skill-pill">OrthoFinder</div>
+        <div class="skill-pill">IQ-TREE / FastTree</div>
+        <div class="skill-pill">NCBI Datasets</div>
+        <div class="skill-pill">Sequence Analysis</div>
+        <div class="skill-pill">Phylogenetic Modeling</div>
+      </div>
+    </div>
+ 
+    <div class="skill-group reveal">
+      <div class="skill-group-name">Machine Learning & Data Science</div>
+      <div class="skill-pills">
+        <div class="skill-pill">TensorFlow</div>
+        <div class="skill-pill">NumPy / Pandas / SciPy</div>
+        <div class="skill-pill">Matplotlib</div>
+        <div class="skill-pill">CNN / RNN / MLP</div>
+        <div class="skill-pill">Hebb Net / ADALINE</div>
+        <div class="skill-pill">Unsupervised Learning</div>
+      </div>
+    </div>
+ 
+    <div class="skill-group reveal">
+      <div class="skill-group-name">Software & Infrastructure</div>
+      <div class="skill-pills">
+        <div class="skill-pill">PostgreSQL / PostGIS</div>
+        <div class="skill-pill">Docker</div>
+        <div class="skill-pill">Git</div>
+        <div class="skill-pill">Unix / Linux</div>
+        <div class="skill-pill">Jupyter</div>
+        <div class="skill-pill">VM Deployment</div>
+      </div>
+    </div>
+ 
+    <div class="skill-group reveal">
+      <div class="skill-group-name">Wet Lab & Instrumentation</div>
+      <div class="skill-pills">
+        <div class="skill-pill">PCR Amplification</div>
+        <div class="skill-pill">SnapGene</div>
+        <div class="skill-pill">Bacterial Plasmid DNA</div>
+        <div class="skill-pill">OCT Systems Assembly</div>
+        <div class="skill-pill">Imaging Probe Fabrication</div>
+      </div>
+    </div>
+ 
+    <div class="skill-group reveal">
+      <div class="skill-group-name">Languages</div>
+      <div class="skill-pills">
+        <div class="skill-pill">English (Native)</div>
+        <div class="skill-pill">Russian (Native)</div>
+      </div>
+    </div>
+ 
+  </div>
+</div>
+ 
+<!-- CONTACT -->
+<div id="contact">
+  <div class="contact-inner">
+    <div class="eyebrow">Contact</div>
+    <h2 class="section-heading">Let's collaborate</h2>
+    <p class="contact-sub">
+      Open to research collaborations, postbac opportunities, industry roles, or
+      conversations about computational biology. Reach out — I respond to everything.
+    </p>
+    <div class="contact-links">
+      <a href="mailto:aleksandraavramenko2806@gmail.com" class="btn-primary">Send email</a>
+      <a href="https://www.linkedin.com/in/aavram28/" target="_blank" rel="noopener" class="btn-ghost">LinkedIn</a>
+      <a href="https://github.com/28flexi06" target="_blank" rel="noopener" class="btn-ghost">GitHub</a>
+    </div>
+  </div>
+</div>
+ 
+<footer>
+  <p>© 2026 Aleksandra Avramenko</p>
+  <p>Waterville, ME · aleksandraavramenko2806@gmail.com</p>
+</footer>
+ 
+<script>
+  // ── Scroll reveal ──
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const delay = parseInt(e.target.dataset.delay) || 0;
+        setTimeout(() => e.target.classList.add('visible'), delay);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
+ 
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    el.dataset.delay = (i % 4) * 80;
+    obs.observe(el);
+  });
+ 
+  // ── DNA Helix animation ──
+  (function () {
+    const canvas = document.getElementById('helix-canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H;
+ 
+    function resize() {
+      W = canvas.offsetWidth;
+      H = canvas.offsetHeight;
+      canvas.width = W * devicePixelRatio;
+      canvas.height = H * devicePixelRatio;
+      ctx.scale(devicePixelRatio, devicePixelRatio);
+    }
+ 
+    function draw(t) {
+      ctx.clearRect(0, 0, W, H);
+      const cx = W * 0.5;
+      const amplitude = W * 0.28;
+      const wavelength = 180;
+      const speed = 0.0004;
+      const numNodes = 18;
+ 
+      ctx.lineWidth = 1.5;
+      ctx.lineCap = 'round';
+ 
+      for (let strand = 0; strand < 2; strand++) {
+        const offset = strand === 0 ? 0 : Math.PI;
+        ctx.beginPath();
+        for (let y = 0; y <= H; y += 2) {
+          const x = cx + amplitude * Math.sin((y / wavelength) * Math.PI * 2 + t * speed * 1000 + offset);
+          y === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = strand === 0 ? 'rgba(45,218,180,0.6)' : 'rgba(139,191,176,0.4)';
+        ctx.stroke();
+      }
+ 
+      for (let i = 0; i < numNodes; i++) {
+        const y = (i / numNodes) * H + ((t * speed * 400) % (H / numNodes));
+        const x1 = cx + amplitude * Math.sin((y / wavelength) * Math.PI * 2 + t * speed * 1000);
+        const x2 = cx + amplitude * Math.sin((y / wavelength) * Math.PI * 2 + t * speed * 1000 + Math.PI);
+        const progress = Math.abs(Math.sin((y / wavelength) * Math.PI * 2 + t * speed * 1000));
+        ctx.beginPath();
+        ctx.moveTo(x1, y);
+        ctx.lineTo(x2, y);
+        ctx.strokeStyle = `rgba(45,218,180,${0.15 + progress * 0.25})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        [x1, x2].forEach(x => {
+          ctx.beginPath();
+          ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(45,218,180,${0.4 + progress * 0.4})`;
+          ctx.fill();
+        });
+      }
+ 
+      requestAnimationFrame(draw);
+    }
+ 
+    window.addEventListener('resize', resize);
+    resize();
+    requestAnimationFrame(draw);
+  })();
+</script>
+</body>
+</html>
